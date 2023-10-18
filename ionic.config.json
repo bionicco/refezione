@@ -1,0 +1,7 @@
+{
+  "name": "Refezione Scolastica",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

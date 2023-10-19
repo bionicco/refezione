@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ViewChild } from '@angular/core';
+import { EventsService } from '../services/events.service';
+import { CalendarEventGroup } from '../models/event';
+import { IonAccordionGroup } from '@ionic/angular';
+
+import { format } from 'date-fns';
+
+import { it } from 'date-fns/locale';
 
 @Component({
   selector: 'app-tab1',
@@ -8,15 +14,38 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Tab1Page {
 
+  public eventGroups: CalendarEventGroup[] = [];
+
+  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
+
+  dateFormat = 'yyyy/MM/dd';
+
+  dfnsOptions = {
+    locale: it,
+    addSuffix: true
+  };
+
   constructor(
-    private http: HttpClient
+    private eventsService: EventsService,
   ) {
-    this.http.get<any>(`https://refezione-be.vercel.app/api/refezione?id=1`).subscribe(data => {
-      console.log("------- ~ Tab1Page ~ data:", data);
 
+    this.eventsService.getEvents().subscribe((data) => {
+      this.eventGroups = data;
 
-
-    })
+      this.toggleToday();
+    });
   }
 
+
+  toggleToday = () => {
+    const nativeEl = this.accordionGroup;
+
+    nativeEl.value = format(new Date(), this.dateFormat);
+
+  };
+
+
+
 }
+
+

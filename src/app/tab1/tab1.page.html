@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Menu
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,23 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Menu</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-accordion-group #accordionGroup>
+    <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
+      <ion-item slot="header" color="light">
+        <ion-label>{{eventGroup.date | dfnsFormat: dateFormat}} {{eventGroup.date | dfnsFormatDistanceToNow:
+          dfnsOptions }}</ion-label>
+      </ion-item>
+      <div *ngFor="let event of eventGroup.events" class="ion-padding" slot="content">
+        <div><strong>{{event.displayName}}</strong></div>
+        <div *ngFor="let food of event.foods" class="ion-padding" slot="content">{{food}}</div>
+      </div>
+    </ion-accordion>
+
+  </ion-accordion-group>
+
+
 </ion-content>

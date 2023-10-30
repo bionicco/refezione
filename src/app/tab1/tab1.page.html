@@ -16,8 +16,8 @@
   <ion-accordion-group #accordionGroup>
     <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
       <ion-item slot="header" color="light">
-        <ion-label>{{eventGroup.date | dfnsFormat: dateFormat}} {{eventGroup.date | dfnsFormatDistanceToNow:
-          dfnsOptions }}</ion-label>
+        <ion-label>{{eventGroup.date | myDate}}
+        </ion-label>
       </ion-item>
       <div *ngFor="let event of eventGroup.events" class="ion-padding" slot="content">
         <div><strong>{{event.displayName}}</strong></div>

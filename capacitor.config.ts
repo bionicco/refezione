@@ -8,14 +8,6 @@ const config: CapacitorConfig = {
     androidScheme: 'https'
   },
   plugins: {
-    BackgroundRunner: {
-      label: 'it.bionicco.refezione.check',
-      src: 'runners/runner.js',
-      event: 'checkIn',
-      repeat: true,
-      interval: 30,
-      autoStart: true,
-    },
   },
 };
 

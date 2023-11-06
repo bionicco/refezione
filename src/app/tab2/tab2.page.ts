@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { LocalCantine } from '../models/cantine';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-tab2',
@@ -7,11 +9,26 @@ import { Component } from '@angular/core';
 })
 export class Tab2Page {
 
-  constructor() { }
 
-  async ngAfterViewInit() {
+  myCantines: LocalCantine[] = [];
 
-  } // Test the KV Store
+  constructor(
+    private settingsService: SettingsService
+  ) {
+
+  }
+
+  afterViewInit() {
+    this.settingsService.getMyCantines().then((data) => {
+      this.myCantines = data;
+    });
+  }
+
+
+
+  openCantine(cantine: LocalCantine) {
+    this.settingsService.openCantine(cantine.cantine.id);
+  }
 
 
 

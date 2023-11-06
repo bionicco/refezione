@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { EventsService } from '../services/events.service';
 import { CalendarEventGroup } from '../models/event';
-import { IonAccordionGroup } from '@ionic/angular';
+import { IonAccordionGroup, IonContent } from '@ionic/angular';
 
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 
 import { it } from 'date-fns/locale';
 
@@ -17,6 +17,12 @@ export class Tab1Page {
   public eventGroups: CalendarEventGroup[] = [];
 
   @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
+
+
+  @ViewChild('today') todayElement!: ElementRef;
+
+
+  @ViewChild(IonContent) content!: IonContent;
 
   dateFormat = 'yyyy/MM/dd';
 
@@ -37,12 +43,16 @@ export class Tab1Page {
   }
 
 
-  toggleToday = () => {
+  toggleToday() {
     const nativeEl = this.accordionGroup;
 
     nativeEl.value = format(new Date(), this.dateFormat);
 
   };
+
+  isToday(date: Date): boolean {
+    return isToday(date);
+  }
 
 
 

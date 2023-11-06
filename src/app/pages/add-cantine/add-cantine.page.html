@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Aggiunta mensa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Aggiunta mensa</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-searchbar (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
+    </ion-list-header>
+    <ion-item *ngFor="let cantine of cantines" (click)="addCantine(cantine)">
+      <ion-icon aria-hidden="true" name="add" slot="end"></ion-icon>
+      <ion-label>{{cantine.province}}-{{cantine.city}}-{{cantine.name}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+
+</ion-content>

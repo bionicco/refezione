@@ -2,16 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map } from 'rxjs';
 import { CalendarEventGroup, CalendarEventRaw } from '../models/event';
-import { Cantine } from '../models/cantine';
+import { RemoteCantine } from '../models/cantine';
+import { add } from 'date-fns';
 
 const baseUrl = 'https://refezione-be.vercel.app/api';
+const defaultAddDays = -3;
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventsService {
 
-  cantines: Cantine[] = [];
+  cantines: RemoteCantine[] = [];
 
   constructor(
     private http: HttpClient) {
@@ -20,20 +22,20 @@ export class EventsService {
     });
   }
 
-  getCantines(): Observable<Cantine[]> {
+  getCantines(): Observable<RemoteCantine[]> {
     return this.http.get<any>(`${baseUrl}/refezione`).pipe(map((res) => {
-      console.log("------- ~ EventsService ~ returnthis.http.get<any> ~ res:", res);
-      return res.data
+      return res
     }));
   }
 
   getEvents(): Observable<CalendarEventGroup[]> {
     const cantinesId = [1, 2];
+    const date = add(new Date().setHours(0, 0, 0, 0), { days: defaultAddDays });
 
 
     return forkJoin(
       cantinesId.map(id =>           // <-- `Array#map` function
-        this.http.get<any>(`${baseUrl}/refezione?id=${id}`).pipe(map((res) => res.data.items))
+        this.http.get<any>(`${baseUrl}/refezione?id=${id}&date=${date.toISOString()}`).pipe(map((res) => res.data.items))
       )).pipe(map((items: CalendarEventRaw[][]) => {
         return this.normalizeEvents(items.reduce((acc, val) => acc.concat(val), []));
       }));

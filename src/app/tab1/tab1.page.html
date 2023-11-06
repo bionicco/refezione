@@ -15,6 +15,7 @@
 
   <ion-accordion-group #accordionGroup>
     <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
+      <div #today id="today" *ngIf="isToday(eventGroup.date)"></div>
       <ion-item slot="header" color="light">
         <ion-label>{{eventGroup.date | myDate}}
         </ion-label>

@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { LocalCantine, RemoteCantine } from '../models/cantine';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { Settings } from '../models/settings';
 
 const CANTINE_STORAGE_KEY = "myCantines";
+const SETTINGS_STORAGE_KEY = "settings";
 
 @Injectable({
   providedIn: 'root'
@@ -14,27 +17,31 @@ export class SettingsService {
 
   selectedCantine?: LocalCantine;
 
+  settings: Settings = {
+    notifications: true,
+    notificationsDay: 0,
+    notificationsTime: '12:00'
+  };
+
+  updatedCantines: Subject<LocalCantine[]> = new Subject();
+
+  updatedSettings: Subject<Settings> = new Subject();
+
+
   palette = [
     '#FFCCCC',
     '#FFFFCC',
     '#CCFFCC',
-    '#CCE5FF',
-    '#DDCCFF',
     '#FFDAB9',
-    '#FFD8B1',
     '#E6E6FF',
     '#B2E5FF',
     '#CCFFE5',
     '#FFFCDA',
-    '#FFCCCC',
     '#E0E0E0',
-    '#FFFFCC',
     '#FFE0B2',
     '#E6CCFF',
     '#B2FFFF',
     '#E4C1DE',
-    '#F5F5DC',
-    '#E6E6FA',
   ];
 
   constructor(
@@ -56,24 +63,35 @@ export class SettingsService {
     return cantines || [];
   }
 
-  async addCantine(cantine: LocalCantine): Promise<void> {
+  async addCantine(cantine: LocalCantine): Promise<boolean> {
+    console.log("------- ~ SettingsService ~ addCantine ~ cantine:", cantine);
     const cantines = await this.getMyCantines();
-    cantines.push(cantine);
-    await this.storage.set(CANTINE_STORAGE_KEY, cantines);
+    if (!cantines.find((c) => c.cantine.id === cantine.cantine.id)) {
+      cantines.push(cantine);
+      this.saveCantines(cantines);
+      return true;
+    }
+    return false;
   }
 
   async updateCantine(cantine: LocalCantine): Promise<void> {
     const cantines = await this.getMyCantines();
     const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
     cantines[index] = cantine;
-    await this.storage.set(CANTINE_STORAGE_KEY, cantines);
+    this.saveCantines(cantines);
   }
 
   async removeCantine(cantine: LocalCantine): Promise<void> {
     const cantines = await this.getMyCantines();
     const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
     cantines.splice(index, 1);
+    this.saveCantines(cantines);
+  }
+
+  async saveCantines(cantines: LocalCantine[]): Promise<void> {
     await this.storage.set(CANTINE_STORAGE_KEY, cantines);
+    this.cantines = cantines;
+    this.updatedCantines.next(cantines);
   }
 
   async addNewCantine(cantine: RemoteCantine) {
@@ -81,19 +99,33 @@ export class SettingsService {
       name: `${cantine.city}-${cantine.name}`,
       color: this.getNewColor(),
       cantine: cantine,
+      notifications: true
     });
+  }
 
+  async getCantine(id: number): Promise<LocalCantine | undefined> {
+    const cantines = await this.getMyCantines();
+    const cantine = cantines.find((c) => c.cantine.id == id);
+    return cantine;
   }
 
   openCantine(cantineId: number) {
-    this.selectedCantine = this.cantines.find((c) => c.cantine.id === cantineId);
-    if (this.selectedCantine) {
-      this.router.navigate(['/cantine-detail']);
-    }
+    this.router.navigate(['/cantine-detail'], { queryParams: { id: cantineId } });
+  }
+
+  async getSettings() {
+    this.settings = await this.storage.get(SETTINGS_STORAGE_KEY) || this.settings;
+    return this.settings;
+  }
+
+  async updateSettings(settings: Settings) {
+    await this.storage.set(SETTINGS_STORAGE_KEY, settings);
+    this.settings = settings;
+    this.updatedSettings.next(settings);
   }
 
   getNewColor(): string {
-    for (let color in this.palette) {
+    for (let color of this.palette) {
       const cantineUsing = this.cantines.find((c) => c.color === color);
       if (!cantineUsing) {
         return color;

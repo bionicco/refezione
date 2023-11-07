@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, Subject, forkJoin, map } from 'rxjs';
 import { CalendarEventGroup, CalendarEventRaw } from '../models/event';
-import { RemoteCantine } from '../models/cantine';
+import { LocalCantine, RemoteCantine } from '../models/cantine';
 import { add } from 'date-fns';
+import { SettingsService } from './settings.service';
 
 const baseUrl = 'https://refezione-be.vercel.app/api';
-const defaultAddDays = -3;
+const defaultAddDays = -7;
 
 @Injectable({
   providedIn: 'root'
@@ -15,29 +16,57 @@ export class EventsService {
 
   cantines: RemoteCantine[] = [];
 
+  events: Subject<CalendarEventGroup[]> = new Subject();
+
   constructor(
-    private http: HttpClient) {
-    this.getCantines().subscribe((data) => {
-      this.cantines = data;
+    private http: HttpClient,
+    private settingsService: SettingsService
+  ) {
+    this.getCantines().then(got => {
+      got.subscribe((data) => {
+        this.cantines = data;
+      });
+    });
+
+    this.settingsService.updatedCantines.subscribe((data) => {
+      this.updateEvents();
     });
   }
 
-  getCantines(): Observable<RemoteCantine[]> {
+  async getCantines(): Promise<Observable<RemoteCantine[]>> {
+    const myCatines = await this.settingsService.getMyCantines();
     return this.http.get<any>(`${baseUrl}/refezione`).pipe(map((res) => {
+      res.forEach((cantine: RemoteCantine) => {
+        cantine.isAdded = myCatines.find((c) => c.cantine.id === cantine.id) ? true : false;
+      });
       return res
     }));
   }
 
-  getEvents(): Observable<CalendarEventGroup[]> {
-    const cantinesId = [1, 2];
+  updateEvents() {
+    this.settingsService.getMyCantines().then((cantines) => {
+      this.getEvents(cantines).subscribe((data) => {
+        this.events.next(data);
+      });
+    });
+  }
+
+
+  getEvents(cantines: LocalCantine[]): Observable<CalendarEventGroup[]> {
     const date = add(new Date().setHours(0, 0, 0, 0), { days: defaultAddDays });
-
-
     return forkJoin(
-      cantinesId.map(id =>           // <-- `Array#map` function
-        this.http.get<any>(`${baseUrl}/refezione?id=${id}&date=${date.toISOString()}`).pipe(map((res) => res.data.items))
+      cantines.map(c =>           // <-- `Array#map` function
+        this.http.get<any>(`${baseUrl}/refezione?id=${c.cantine.id}&date=${date.toISOString()}`).pipe(map((res) => {
+          const items: CalendarEventRaw[] = res.data.items;
+          const r: CalendarEventRaw[] = items.map((item: CalendarEventRaw) => {
+            item.cantine = c;
+            return item;
+          })
+          return r;
+        }
+        ))
       )).pipe(map((items: CalendarEventRaw[][]) => {
-        return this.normalizeEvents(items.reduce((acc, val) => acc.concat(val), []));
+        return this.normalizeEvents(items.reduce((acc, val) => acc.concat(val), []), cantines);
       }));
 
     // return this.http.get<any>(`${baseUrl}/refezione?id=1`).pipe(map((res) => {
@@ -46,8 +75,7 @@ export class EventsService {
     // }));
   }
 
-  normalizeEvents(events: CalendarEventRaw[]): CalendarEventGroup[] {
-    console.log("------- ~ EventsService ~ normalizeEvents ~ events:", events);
+  normalizeEvents(events: CalendarEventRaw[], cantines: LocalCantine[]): CalendarEventGroup[] {
     const groups: CalendarEventGroup[] = [];
     events.forEach((event) => {
       const date = new Date(event.start.date);
@@ -55,14 +83,14 @@ export class EventsService {
       if (group) {
         group.events.push({
           foods: event.summary.split(','),
-          displayName: event.organizer.displayName,
+          cantine: event.cantine,
         });
       } else {
         groups.push({
           date,
           events: [{
             foods: event.summary.split(','),
-            displayName: event.organizer.displayName,
+            cantine: event.cantine,
 
           }],
         });

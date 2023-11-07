@@ -6,26 +6,69 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Configurazione</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
-    <ion-list-header>
-      <ion-label>Mense selezionate</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let cantine of myCantines" [button]="true" (click)="openCantine(cantine)">
-      <ion-icon aria-hidden="true" name="elipse" slot="start" style="color:{{cantine.color}}"></ion-icon>
-      <ion-label>{{cantine.name}}</ion-label>
-    </ion-item>
-  </ion-list>
-  <div *ngIf="!myCantines?.length">
-    <h2>Non è stata aggiunta nessuna mensa</h2>
-    <p>Aggiungine una con il pulsante in basso</p>
-  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Mense selezionate</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let cantine of myCantines" [button]="true" (click)="openCantine(cantine)">
+          <ion-icon aria-hidden="true" name="ellipse" slot="start" style="color:{{cantine.color}}"></ion-icon>
+          <ion-label>{{cantine.name}}</ion-label>
+          <ion-icon aria-hidden="true" name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-item>
+
+        <ion-card *ngIf="!myCantines?.length">
+          <ion-card-header>
+            <ion-card-title>Non è stata aggiunta nessuna mensa</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Aggiungine una con il pulsante in basso</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Notifiche</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-toggle [ngModel]="settings.notifications" (ionChange)="setNotification($event)">
+            <ion-label>Invia notifiche quotidiane</ion-label>
+            <ion-note color="medium">E' sempre possibile disattivare le notifiche </ion-note>
+          </ion-toggle>
+        </ion-item>
+        <ion-item [disabled]="!settings.notifications">
+          <!-- <ion-label>Orario di ricezione</ion-label> -->
+          <!-- <ion-datetime-button class="notification-datetime" [ngModel]="settings.notificationsTime"
+            (ngModelChange)="changeTime($event)" name="dateTime" ngDefaultControl
+            datetime="datetime"></ion-datetime-button> -->
+
+          <ion-select label="Orario di ricezione" [value]="settings.notificationsTime" (ionChange)="changeTime($event)">
+            <ion-select-option *ngFor="let time of times" [value]="time">{{time}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item [disabled]="!settings.notifications">
+          <ion-select label="Riferite a " [value]="settings.notificationsDay"
+            (ionChange)="changeNotificationDay($event)" placeholder="Giorno stesso">
+            <ion-select-option [value]="0">Giorno stesso</ion-select-option>
+            <ion-select-option [value]="1">Giorno successivo</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
   <ion-fab slot="fixed" horizontal="end" vertical="bottom">
     <ion-fab-button>

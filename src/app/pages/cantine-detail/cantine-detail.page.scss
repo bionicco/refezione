@@ -1,0 +1,22 @@
+.colors-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 0;
+    padding: 15px;
+    .color-icon {
+        display: inline-block;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        margin: 5px 3px;
+
+        &.color-selected {
+            width: 25px;
+            height: 25px;
+            margin: 0px;
+            border: 3px solid #555;
+        }
+    }
+}

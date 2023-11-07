@@ -1,13 +1,62 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>cantine-detail</ion-title>
+    <ion-title>Mensa {{cantine?.cantine?.name}} {{cantine?.cantine?.city}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">cantine-detail</ion-title>
+      <ion-title size="large">Mensa {{cantine?.cantine?.name}} {{cantine?.cantine?.city}}</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div *ngIf="!cantine?.cantine">
+    Errore: Questa mensa non esiste o non è stata aggiunta
+  </div>
+
+  <ion-list *ngIf="cantine?.cantine">
+    <ion-item>
+      <ion-label>Nome </ion-label>
+      <ion-input [(ngModel)]="cantine.name" (ionChange)="update()"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>Colore</ion-label>
+    </ion-item>
+    <div class="colors-container">
+      <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
+        [ngClass]="{'color-selected':color==cantine.color}" (click)="selectColor(color)"></div>
+    </div>
+
+    <ion-item>
+      <ion-checkbox justify="space-between" [(ngModel)]="cantine.notifications" (ionChange)="update()">Inserisci nelle
+        notifiche</ion-checkbox>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-item>
+    <ion-label class="ion-text-wrap" color="medium">
+      <p>Il nome può essere qualunque vi aiuti ad identificare meglio il menu a cui si fa riferimento (per esempio il
+        nome
+        del bambino che mangia in quella mensa)</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-button expand="block" color="danger" id="present-alert">
+    <ion-icon slot="start" name="trash-outline"></ion-icon>
+    Elimina
+  </ion-button>
+
+  <ion-button expand="block" (click)="back()">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Ritorna
+  </ion-button>
+
+
 </ion-content>
+
+<ion-alert trigger="present-alert" class="custom-alert"
+  header="Vuoi davvero togliere questa mensa da quelle selezionate?" [buttons]="alertButtons"></ion-alert>

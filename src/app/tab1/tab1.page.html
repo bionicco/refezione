@@ -6,27 +6,62 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Menu</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-accordion-group #accordionGroup>
+  <ion-accordion-group #accordionGroup expand="inset">
     <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
-      <div #today id="today" *ngIf="isToday(eventGroup.date)"></div>
-      <ion-item slot="header" color="light">
-        <ion-label>{{eventGroup.date | myDate}}
+      <!-- <div #today id="today" *ngIf="isToday(eventGroup.date)"></div> -->
+      <ion-item slot="header">
+        <ion-icon name="ellipse" size="small" *ngIf="isToday(eventGroup.date)"></ion-icon>
+        <ion-label>
+          <span class="date-name">{{eventGroup.date | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
+          <span class="date-sub">{{eventGroup.date | myDate}}</span>
         </ion-label>
       </ion-item>
-      <div *ngFor="let event of eventGroup.events" class="ion-padding" slot="content">
-        <div><strong>{{event.displayName}}</strong></div>
-        <div *ngFor="let food of event.foods" class="ion-padding" slot="content">{{food}}</div>
+
+      <div slot="content">
+
+        <ion-card *ngFor="let event of eventGroup.events">
+          <ion-card-header style="background-color: {{event.cantine.color}}">
+            <ion-card-subtitle>{{event.cantine.name}}</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-item *ngFor="let food of event.foods">
+              {{food}}
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+
       </div>
     </ion-accordion>
 
   </ion-accordion-group>
+
+  <ion-card *ngIf="!eventGroups?.length">
+    <ion-card-header>
+      <ion-card-title *ngIf="cantines.length === 0">Non sono è stata selezionata nessuna mensa</ion-card-title>
+      <ion-card-title *ngIf="cantines.length === 1">Non sono presenti menu per questo periodo nella mensa
+        selezionata</ion-card-title>
+      <ion-card-title *ngIf="cantines.length > 1">Non sono presenti menu per questo periodo nelle {{cantines.length}}
+        mense selezionate</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p *ngIf="cantines.length > 0">
+        Per ottenere maggiori risultati potrebbe essere utile aggiungere altre mense
+      </p>
+      <ion-button expand="block" color="primary" [routerLink]="['/add-cantine']">
+        <ion-icon slot="add" name="arrow-back-outline"></ion-icon>
+        Aggiungi mensa
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 
 
 </ion-content>

@@ -19,8 +19,8 @@ export class AddCantinePage implements OnInit {
     private settingsService: SettingsService
   ) { }
 
-  ngOnInit() {
-    this.eventsService.getCantines().subscribe((data) => {
+  async ngOnInit() {
+    (await this.eventsService.getCantines()).subscribe((data) => {
       console.log("------- ~ AddCantinePage ~ this.eventsService.getCantines ~ data:", data);
       this.allCantines = data.sort((a, b) => (`${a.province}-${a.city}-${a.name}`).localeCompare(`${b.province}-${b.city}-${b.name}`));
       this.cantines = this.allCantines;
@@ -34,8 +34,10 @@ export class AddCantinePage implements OnInit {
     });
   }
 
-  async addCantine(cantine: RemoteCantine) {
-    await this.settingsService.addNewCantine(cantine);
+  async addCantine(cantine: RemoteCantine, isAlreadyAdded: boolean) {
+    if (!isAlreadyAdded) {
+      await this.settingsService.addNewCantine(cantine);
+    }
     this.settingsService.openCantine(cantine.id);
   }
 

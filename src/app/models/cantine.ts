@@ -5,10 +5,12 @@ export interface RemoteCantine {
     description: string,
     city: string,
     province: string,
+    isAdded?: boolean,
 }
 
 export interface LocalCantine {
     name: string,
     color?: string,
     cantine: RemoteCantine,
+    notifications: boolean,
 }

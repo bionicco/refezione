@@ -15,8 +15,10 @@
     <ion-list-header>
       <ion-searchbar (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
     </ion-list-header>
-    <ion-item *ngFor="let cantine of cantines" (click)="addCantine(cantine)">
-      <ion-icon aria-hidden="true" name="add" slot="end"></ion-icon>
+    <ion-item *ngFor="let cantine of cantines" (click)="addCantine(cantine,!!cantine.isAdded )">
+      <ion-icon aria-hidden="true" name="add" slot="end" *ngIf="!cantine.isAdded"></ion-icon>
+      <ion-icon aria-hidden="true" color="success" name="checkmark-circle-outline" slot="end"
+        *ngIf="cantine.isAdded"></ion-icon>
       <ion-label>{{cantine.province}}-{{cantine.city}}-{{cantine.name}}</ion-label>
     </ion-item>
   </ion-list>

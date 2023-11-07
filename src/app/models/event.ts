@@ -1,3 +1,5 @@
+import { LocalCantine } from "./cantine";
+
 export interface CalendarEventRaw {
     summary: string,
     organizer: {
@@ -5,6 +7,7 @@ export interface CalendarEventRaw {
     }
     start: CalendarRawDate,
     end: CalendarRawDate,
+    cantine: LocalCantine
 }
 
 export interface CalendarRawDate {
@@ -13,7 +16,7 @@ export interface CalendarRawDate {
 
 export interface CalendarEvent {
     foods: string[],
-    displayName: string
+    cantine: LocalCantine
 }
 
 export interface CalendarEventGroup {

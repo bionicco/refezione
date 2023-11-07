@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { EventsService } from '../services/events.service';
 import { CalendarEventGroup } from '../models/event';
 import { IonAccordionGroup, IonContent } from '@ionic/angular';
@@ -6,15 +6,20 @@ import { IonAccordionGroup, IonContent } from '@ionic/angular';
 import { format, isToday } from 'date-fns';
 
 import { it } from 'date-fns/locale';
+import { DateFnsConfigurationService } from 'ngx-date-fns';
+import { LocalCantine } from '../models/cantine';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit {
 
   public eventGroups: CalendarEventGroup[] = [];
+
+  public cantines: LocalCantine[] = [];
 
   @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
 
@@ -33,15 +38,22 @@ export class Tab1Page {
 
   constructor(
     private eventsService: EventsService,
+    public config: DateFnsConfigurationService,
+    public settingsService: SettingsService
   ) {
 
-    this.eventsService.getEvents().subscribe((data) => {
+    this.config.setLocale(it);
+    this.eventsService.events.subscribe(async (data) => {
       this.eventGroups = data;
-
       this.toggleToday();
+
+      this.cantines = await this.settingsService.getMyCantines();
     });
   }
 
+  ngOnInit() {
+    this.eventsService.updateEvents();
+  }
 
   toggleToday() {
     const nativeEl = this.accordionGroup;

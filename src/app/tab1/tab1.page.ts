@@ -31,6 +31,8 @@ export class Tab1Page implements OnInit {
 
   dateFormat = 'yyyy/MM/dd';
 
+  loading = false;
+
   dfnsOptions = {
     locale: it,
     addSuffix: true
@@ -45,13 +47,14 @@ export class Tab1Page implements OnInit {
     this.config.setLocale(it);
     this.eventsService.events.subscribe(async (data) => {
       this.eventGroups = data;
-      this.toggleToday();
-
       this.cantines = await this.settingsService.getMyCantines();
+      this.loading = false;
+      this.toggleToday();
     });
   }
 
   ngOnInit() {
+    this.loading = true;
     this.eventsService.updateEvents();
   }
 

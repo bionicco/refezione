@@ -13,7 +13,9 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-accordion-group #accordionGroup expand="inset">
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-accordion-group #accordionGroup expand="inset" [hidden]="loading">
     <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
       <!-- <div #today id="today" *ngIf="isToday(eventGroup.date)"></div> -->
       <ion-item slot="header">
@@ -44,7 +46,7 @@
 
   </ion-accordion-group>
 
-  <ion-card *ngIf="!eventGroups?.length">
+  <ion-card *ngIf="!eventGroups?.length && !loading">
     <ion-card-header>
       <ion-card-title *ngIf="cantines.length === 0">Non sono è stata selezionata nessuna mensa</ion-card-title>
       <ion-card-title *ngIf="cantines.length === 1">Non sono presenti menu per questo periodo nella mensa

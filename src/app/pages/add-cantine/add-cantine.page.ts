@@ -21,7 +21,6 @@ export class AddCantinePage implements OnInit {
 
   async ngOnInit() {
     (await this.eventsService.getCantines()).subscribe((data) => {
-      console.log("------- ~ AddCantinePage ~ this.eventsService.getCantines ~ data:", data);
       this.allCantines = data.sort((a, b) => (`${a.province}-${a.city}-${a.name}`).localeCompare(`${b.province}-${b.city}-${b.name}`));
       this.cantines = this.allCantines;
     });

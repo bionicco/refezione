@@ -45,6 +45,10 @@ export class EventsService {
 
   updateEvents() {
     this.settingsService.getMyCantines().then((cantines) => {
+      if (cantines.length === 0) {
+        this.events.next([]);
+        return;
+      }
       this.getEvents(cantines).subscribe((data) => {
         this.events.next(data);
       });
@@ -68,11 +72,6 @@ export class EventsService {
       )).pipe(map((items: CalendarEventRaw[][]) => {
         return this.normalizeEvents(items.reduce((acc, val) => acc.concat(val), []), cantines);
       }));
-
-    // return this.http.get<any>(`${baseUrl}/refezione?id=1`).pipe(map((res) => {
-    //   console.log("------- ~ EventsService ~ returnthis.http.get<any> ~ res:", res);
-    //   return this.normalizeEvents(res.data.items)
-    // }));
   }
 
   normalizeEvents(events: CalendarEventRaw[], cantines: LocalCantine[]): CalendarEventGroup[] {

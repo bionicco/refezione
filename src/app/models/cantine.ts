@@ -5,6 +5,7 @@ export interface RemoteCantine {
     description: string,
     city: string,
     province: string,
+    separator: string,
     isAdded?: boolean,
 }
 

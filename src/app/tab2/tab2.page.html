@@ -21,7 +21,10 @@
       <ion-list>
         <ion-item *ngFor="let cantine of myCantines" [button]="true" (click)="openCantine(cantine)">
           <ion-icon aria-hidden="true" name="ellipse" slot="start" style="color:{{cantine.color}}"></ion-icon>
-          <ion-label>{{cantine.name}}</ion-label>
+          <ion-label class="ion-text-wrap">
+            <h4> {{cantine.name}}</h4>
+            <p>{{cantine.cantine.city}} {{cantine.cantine.name}}</p>
+          </ion-label>
           <ion-icon aria-hidden="true" name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
 

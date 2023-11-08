@@ -61,20 +61,17 @@ export class Tab2Page implements OnInit {
   }
 
   setNotification(event: any) {
-    console.log("------- ~ Tab2Page ~ setNotification ~ event:", event);
     this.settings.notifications = event.detail.checked;
     this.updateSettings()
 
   }
 
   changeTime(event: any) {
-    console.log("------- ~ Tab2Page ~ changeTime ~ event:", event);
     this.settings.notificationsTime = event.detail.value;
     this.updateSettings()
   }
 
   changeNotificationDay(event: any) {
-    console.log("------- ~ Tab2Page ~ changeNotificationDay ~ event:", event);
     this.settings.notificationsDay = event.detail.value;
     this.updateSettings()
   }

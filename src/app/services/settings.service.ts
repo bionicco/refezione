@@ -64,7 +64,6 @@ export class SettingsService {
   }
 
   async addCantine(cantine: LocalCantine): Promise<boolean> {
-    console.log("------- ~ SettingsService ~ addCantine ~ cantine:", cantine);
     const cantines = await this.getMyCantines();
     if (!cantines.find((c) => c.cantine.id === cantine.cantine.id)) {
       cantines.push(cantine);

@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Mensa {{cantine?.cantine?.name}} {{cantine?.cantine?.city}}</ion-title>
@@ -15,42 +15,41 @@
     Errore: Questa mensa non esiste o non è stata aggiunta
   </div>
 
-  <ion-list *ngIf="cantine?.cantine">
+  <ion-list *ngIf="cantine?.cantine" [inset]="true">
     <ion-item>
-      <ion-label>Nome </ion-label>
+      <ion-label><strong>Nome </strong></ion-label>
       <ion-input [(ngModel)]="cantine.name" (ionChange)="update()"></ion-input>
     </ion-item>
 
 
     <ion-item>
-      <ion-label>Colore</ion-label>
+      <strong>Colore</strong>
+      <div class="colors-container">
+        <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
+          [ngClass]="{'color-selected':color==cantine.color}" (click)="selectColor(color)"></div>
+      </div>
     </ion-item>
-    <div class="colors-container">
-      <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
-        [ngClass]="{'color-selected':color==cantine.color}" (click)="selectColor(color)"></div>
-    </div>
 
     <ion-item>
-      <ion-checkbox justify="space-between" [(ngModel)]="cantine.notifications" (ionChange)="update()">Inserisci nelle
-        notifiche</ion-checkbox>
+      <ion-checkbox justify="space-between" [(ngModel)]="cantine.notifications" (ionChange)="update()"><strong>Inserisci
+          nelle notifiche</strong></ion-checkbox>
     </ion-item>
 
   </ion-list>
 
-  <ion-item>
-    <ion-label class="ion-text-wrap" color="medium">
-      <p>Il nome può essere qualunque vi aiuti ad identificare meglio il menu a cui si fa riferimento (per esempio il
-        nome
-        del bambino che mangia in quella mensa)</p>
-    </ion-label>
-  </ion-item>
+  <ion-label class="ion-text-wrap" color="medium">
+    <p class="padding-15">Il nome può essere qualunque vi aiuti ad identificare meglio il menu a cui si fa riferimento
+      (per esempio il
+      nome
+      del bambino che mangia in quella mensa)</p>
+  </ion-label>
 
-  <ion-button expand="block" color="danger" id="present-alert">
+  <ion-button class="margin-top-20" expand="block" color="danger" id="present-alert">
     <ion-icon slot="start" name="trash-outline"></ion-icon>
     Elimina
   </ion-button>
 
-  <ion-button expand="block" (click)="back()">
+  <ion-button class="margin-top-20" expand="block" (click)="back()">
     <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
     Ritorna
   </ion-button>

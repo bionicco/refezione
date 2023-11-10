@@ -58,8 +58,13 @@
             (ngModelChange)="changeTime($event)" name="dateTime" ngDefaultControl
             datetime="datetime"></ion-datetime-button> -->
 
-          <ion-select label="Orario di ricezione" [value]="settings.notificationsTime" (ionChange)="changeTime($event)">
-            <ion-select-option *ngFor="let time of times" [value]="time">{{time}}</ion-select-option>
+          <ion-select label="Orario di ricezione" [value]="settings.notificationsTimeHour"
+            (ionChange)="changeTimeHours($event)">
+            <ion-select-option *ngFor="let hour of hours" [value]="hour">{{hour | number : '2.0-0'}}</ion-select-option>
+          </ion-select>&nbsp;:&nbsp;
+          <ion-select [value]="settings.notificationsTimeMinute" (ionChange)="changeTimeMinutes($event)">
+            <ion-select-option *ngFor="let minute of minutes" [value]="minute">{{minute | number :
+              '2.0-0'}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item [disabled]="!settings.notifications">

@@ -57,14 +57,15 @@ export class NotificationsService {
       if (isBefore(event.date, new Date()) && !isSameDay(event.date, new Date())) return;
       count++;
       let fullString = ``;
-      event.events.forEach((event) => {
+      event.events.filter(x => x.cantine.notifications).forEach((event) => {
         fullString = fullString.concat(`${event.cantine.name}\n`);
         fullString = fullString.concat(event.foods.join('\n'));
         fullString = fullString.concat('\n');
       });
+      if (!fullString) return;
       const notificationDate = new Date(event.date);
-      notificationDate.setHours(settings.notificationsTime.split(':')[0] as unknown as number);
-      notificationDate.setMinutes(settings.notificationsTime.split(':')[1] as unknown as number);
+      notificationDate.setHours(settings.notificationsTimeHour);
+      notificationDate.setMinutes(settings.notificationsTimeMinute);
       addDays(notificationDate, -settings.notificationsDay);
 
       const schema: LocalNotificationSchema = {

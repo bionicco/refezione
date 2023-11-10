@@ -19,7 +19,10 @@
       <ion-icon aria-hidden="true" name="add" slot="end" *ngIf="!cantine.isAdded"></ion-icon>
       <ion-icon aria-hidden="true" color="success" name="checkmark-circle-outline" slot="end"
         *ngIf="cantine.isAdded"></ion-icon>
-      <ion-label>{{cantine.province}}-{{cantine.city}}-{{cantine.name}}</ion-label>
+      <ion-label class="ion-text-wrap">
+        <p>{{cantine.province}}-{{cantine.city}}</p>
+        {{cantine.name}}
+      </ion-label>
     </ion-item>
   </ion-list>
 

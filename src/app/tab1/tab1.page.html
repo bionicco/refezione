@@ -48,7 +48,7 @@
 
   <ion-card *ngIf="!eventGroups?.length && !loading">
     <ion-card-header>
-      <ion-card-title *ngIf="cantines.length === 0">Non sono è stata selezionata nessuna mensa</ion-card-title>
+      <ion-card-title *ngIf="cantines.length === 0">Non sono è stata aggiunta alcuna mensa</ion-card-title>
       <ion-card-title *ngIf="cantines.length === 1">Non sono presenti menu per questo periodo nella mensa
         selezionata</ion-card-title>
       <ion-card-title *ngIf="cantines.length > 1">Non sono presenti menu per questo periodo nelle {{cantines.length}}

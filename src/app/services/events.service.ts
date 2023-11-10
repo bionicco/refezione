@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, forkJoin, map } from 'rxjs';
+import { Observable, Subject, catchError, forkJoin, from, map } from 'rxjs';
 import { CalendarEventGroup, CalendarEventRaw } from '../models/event';
 import { LocalCantine, RemoteCantine } from '../models/cantine';
 import { add } from 'date-fns';
@@ -39,6 +39,7 @@ export class EventsService {
       res.forEach((cantine: RemoteCantine) => {
         cantine.isAdded = myCatines.find((c) => c.cantine.id === cantine.id) ? true : false;
       });
+      this.settingsService.updateLocalCantinesValues(res);
       return res
     }));
   }
@@ -57,21 +58,30 @@ export class EventsService {
 
 
   getEvents(cantines: LocalCantine[]): Observable<CalendarEventGroup[]> {
-    const date = add(new Date().setHours(0, 0, 0, 0), { days: defaultAddDays });
     return forkJoin(
       cantines.map(c =>           // <-- `Array#map` function
-        this.http.get<any>(`${baseUrl}/refezione?id=${c.cantine.id}&date=${date.toISOString()}`).pipe(map((res) => {
-          const items: CalendarEventRaw[] = res.data.items;
-          const r: CalendarEventRaw[] = items.map((item: CalendarEventRaw) => {
-            item.cantine = c;
-            return item;
-          })
-          return r;
-        }
-        ))
+        this.downloadOrCached(c)
       )).pipe(map((items: CalendarEventRaw[][]) => {
         return this.normalizeEvents(items.reduce((acc, val) => acc.concat(val), []), cantines);
       }));
+  }
+
+  downloadOrCached(cantine: LocalCantine): Observable<CalendarEventRaw[]> {
+    const date = add(new Date().setHours(0, 0, 0, 0), { days: defaultAddDays });
+    return this.http.get<any>(`${baseUrl}/refezione?id=${cantine.cantine.id}&date=${date.toISOString()}`).pipe(
+      catchError((err) => {
+        return from(this.settingsService.getCacheResult(cantine))
+      }),
+      map((res) => {
+        const items: CalendarEventRaw[] = res.data?.items || res;
+        const r: CalendarEventRaw[] = items.map((item: CalendarEventRaw) => {
+          item.cantine = cantine;
+          return item;
+        })
+        this.settingsService.saveCacheResult(cantine, r)
+        return r;
+      }
+      ))
   }
 
   normalizeEvents(events: CalendarEventRaw[], cantines: LocalCantine[]): CalendarEventGroup[] {
@@ -81,14 +91,14 @@ export class EventsService {
       const group = groups.find((g) => g.date.getTime() === date.getTime());
       if (group) {
         group.events.push({
-          foods: event.summary.split(','),
+          foods: event.summary.split(event.cantine.cantine.separator),
           cantine: event.cantine,
         });
       } else {
         groups.push({
           date,
           events: [{
-            foods: event.summary.split(','),
+            foods: event.summary.split(event.cantine.cantine.separator),
             cantine: event.cantine,
 
           }],

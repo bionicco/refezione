@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalCantine } from 'src/app/models/cantine';
 import { SettingsService } from 'src/app/services/settings.service';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-cantine-detail',
@@ -55,13 +56,19 @@ export class CantineDetailPage implements OnInit {
   }
 
   delete() {
-
     this.settingsService.removeCantine(this.cantine);
     this.back();
   }
 
   back() {
     this.router.navigate(['/tabs/tab2']);
+  }
+
+  async addToCalendar() {
+    if (this.cantine.cantine.sharing) {
+      await Browser.open({ url: this.cantine.cantine.sharing });
+
+    }
   }
 
 }

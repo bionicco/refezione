@@ -46,8 +46,8 @@ export class Tab1Page implements OnInit {
 
     this.config.setLocale(it);
     this.eventsService.events.subscribe(async (data) => {
-      this.eventGroups = data;
       this.cantines = await this.settingsService.getMyCantines();
+      this.eventGroups = data;
       this.loading = false;
       this.toggleToday();
     });

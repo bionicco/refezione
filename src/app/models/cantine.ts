@@ -7,6 +7,7 @@ export interface RemoteCantine {
     province: string,
     separator: string,
     isAdded?: boolean,
+    sharing?: string,
 }
 
 export interface LocalCantine {

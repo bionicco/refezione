@@ -49,6 +49,12 @@
     Elimina
   </ion-button>
 
+  <ion-button class="margin-top-20" expand="block" color="primary" (click)="addToCalendar()"
+    *ngIf="cantine?.cantine?.sharing">
+    <ion-icon slot="start" name="calendar-outline"></ion-icon>
+    Aggiungi al tuo calendario
+  </ion-button>
+
   <ion-button class="margin-top-20" expand="block" (click)="back()">
     <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
     Ritorna

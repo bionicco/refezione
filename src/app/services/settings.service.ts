@@ -4,9 +4,13 @@ import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Settings } from '../models/settings';
+import { ToastController } from '@ionic/angular';
+import { CalendarEventRaw } from '../models/event';
 
-const CANTINE_STORAGE_KEY = "myCantines";
-const SETTINGS_STORAGE_KEY = "settings";
+const CANTINE_STORAGE_KEY = 'myCantines';
+const SETTINGS_STORAGE_KEY = 'settings';
+const SETTINGS_CACHE_KEY = 'cached';
+const DEFAULT_TOAST_DURATION = 1500;
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +24,8 @@ export class SettingsService {
   settings: Settings = {
     notifications: true,
     notificationsDay: 0,
-    notificationsTime: '12:00'
+    notificationsTimeHour: 12,
+    notificationsTimeMinute: 0
   };
 
   updatedCantines: Subject<LocalCantine[]> = new Subject();
@@ -46,7 +51,8 @@ export class SettingsService {
 
   constructor(
     private storage: Storage,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController
   ) {
     this.init();
   }
@@ -73,6 +79,17 @@ export class SettingsService {
     return false;
   }
 
+  async updateLocalCantinesValues(cantines: RemoteCantine[]) {
+    const myCantines = await this.getMyCantines();
+    myCantines.forEach((c) => {
+      const remoteCantine = cantines.find((rc) => rc.id === c.cantine.id);
+      if (remoteCantine) {
+        c.cantine = remoteCantine;
+      }
+    });
+    this.saveCantines(myCantines);
+  }
+
   async updateCantine(cantine: LocalCantine): Promise<void> {
     const cantines = await this.getMyCantines();
     const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
@@ -85,6 +102,7 @@ export class SettingsService {
     const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
     cantines.splice(index, 1);
     this.saveCantines(cantines);
+    this.presentToast(`${cantine.name} rimossa!`, 'danger');
   }
 
   async saveCantines(cantines: LocalCantine[]): Promise<void> {
@@ -100,6 +118,16 @@ export class SettingsService {
       cantine: cantine,
       notifications: true
     });
+    this.presentToast(`${cantine.city}-${cantine.name} aggiunta!`, 'success');
+  }
+
+  async getCacheResult(cantine: LocalCantine): Promise<CalendarEventRaw[]> {
+    const results = await this.storage.get(`${SETTINGS_CACHE_KEY}-${cantine.cantine.id}`) || [];
+    return results;
+  }
+
+  async saveCacheResult(cantine: LocalCantine, results: CalendarEventRaw[]): Promise<void> {
+    await this.storage.set(`${SETTINGS_CACHE_KEY}-${cantine.cantine.id}`, results);
   }
 
   async getCantine(id: number): Promise<LocalCantine | undefined> {
@@ -135,5 +163,19 @@ export class SettingsService {
 
   getColors(): string[] {
     return this.palette;
+  }
+
+  async presentToast(
+    message: string,
+    color: 'secondary' | 'primary' | 'tertiary' | 'success' | 'warning' | 'danger' | 'dark' | 'medium' | 'light' = 'dark',
+    position: 'top' | 'middle' | 'bottom' = 'bottom') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: DEFAULT_TOAST_DURATION,
+      color: color,
+      position: position,
+    });
+
+    await toast.present();
   }
 }

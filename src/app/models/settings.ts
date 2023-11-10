@@ -1,5 +1,6 @@
 export interface Settings {
     notifications: boolean,
-    notificationsTime: string,
+    notificationsTimeHour: number,
+    notificationsTimeMinute: number,
     notificationsDay: number
 }

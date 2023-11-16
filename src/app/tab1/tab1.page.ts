@@ -3,11 +3,12 @@ import { EventsService } from '../services/events.service';
 import { CalendarEventGroup } from '../models/event';
 import { IonAccordionGroup, IonContent } from '@ionic/angular';
 
-import { format, isToday } from 'date-fns';
+import { isToday } from 'date-fns';
+import { isAfter } from 'date-fns';
 
 import { it } from 'date-fns/locale';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
-import { LocalCantine } from '../models/cantine';
+import { LocalCanteen } from '../models/canteen';
 import { SettingsService } from '../services/settings.service';
 
 @Component({
@@ -17,9 +18,10 @@ import { SettingsService } from '../services/settings.service';
 })
 export class Tab1Page implements OnInit {
 
-  public eventGroups: CalendarEventGroup[] = [];
+  public eventGroupsPast: CalendarEventGroup[] = [];
+  public eventGroupsFuture: CalendarEventGroup[] = [];
 
-  public cantines: LocalCantine[] = [];
+  public canteens: LocalCanteen[] = [];
 
   @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
 
@@ -46,8 +48,10 @@ export class Tab1Page implements OnInit {
 
     this.config.setLocale(it);
     this.eventsService.events.subscribe(async (data) => {
-      this.cantines = await this.settingsService.getMyCantines();
-      this.eventGroups = data;
+      this.canteens = await this.settingsService.getMyCanteens();
+      this.eventGroupsPast = data.filter((x) => !isAfter(x.date, new Date()) && !isToday(x.date));
+      this.eventGroupsFuture = data.filter((x) => isAfter(x.date, new Date()) || isToday(x.date));
+      // this.eventGroups = data;
       this.loading = false;
       this.toggleToday();
     });
@@ -59,9 +63,14 @@ export class Tab1Page implements OnInit {
   }
 
   toggleToday() {
-    const nativeEl = this.accordionGroup;
+    // const nativeEl = this.accordionGroup;
+    // nativeEl.value = format(new Date(), this.dateFormat);
 
-    nativeEl.value = format(new Date(), this.dateFormat);
+    setTimeout(() => {
+      if (this.todayElement) {
+        this.todayElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 200);
 
   };
 

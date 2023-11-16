@@ -1,4 +1,4 @@
-import { LocalCantine } from "./cantine";
+import { LocalCanteen } from "./canteen";
 
 export interface CalendarEventRaw {
     summary: string,
@@ -7,7 +7,7 @@ export interface CalendarEventRaw {
     }
     start: CalendarRawDate,
     end: CalendarRawDate,
-    cantine: LocalCantine
+    canteen: LocalCanteen
 }
 
 export interface CalendarRawDate {
@@ -16,7 +16,7 @@ export interface CalendarRawDate {
 
 export interface CalendarEvent {
     foods: string[],
-    cantine: LocalCantine
+    canteen: LocalCanteen
 }
 
 export interface CalendarEventGroup {

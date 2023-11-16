@@ -28,8 +28,8 @@ export class NotificationsService {
       settings = await this.settingsService.getSettings();
     }
     if (!events) {
-      const cantines = await this.settingsService.getMyCantines();
-      events = await this.eventService.getEvents(cantines).toPromise();
+      const canteens = await this.settingsService.getMyCanteens();
+      events = await this.eventService.getEvents(canteens).toPromise();
     }
 
     this.eraseOldNotifications();
@@ -45,6 +45,7 @@ export class NotificationsService {
   }
 
   private async eraseOldNotifications() {
+    // console.log("------- ~ NotificationsService ~ eraseOldNotifications ~ eraseOldNotifications")
     const pendings = await LocalNotifications.getPending();
     LocalNotifications.cancel(pendings);
   };
@@ -57,8 +58,8 @@ export class NotificationsService {
       if (isBefore(event.date, new Date()) && !isSameDay(event.date, new Date())) return;
       count++;
       let fullString = ``;
-      event.events.filter(x => x.cantine.notifications).forEach((event) => {
-        fullString = fullString.concat(`**${event.cantine.name}**\n`);
+      event.events.filter(x => x.canteen.notifications).forEach((event) => {
+        fullString = fullString.concat(`**${event.canteen.name}**\n`);
         fullString = fullString.concat(event.foods.join('\n'));
         fullString = fullString.concat('\n');
       });

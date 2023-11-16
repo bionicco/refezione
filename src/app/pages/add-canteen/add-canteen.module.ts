@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddCantinePageRoutingModule } from './add-cantine-routing.module';
+import { AddCanteenPageRoutingModule } from './add-canteen-routing.module';
 
-import { AddCantinePage } from './add-cantine.page';
+import { AddCanteenPage } from './add-canteen.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AddCantinePageRoutingModule
+    AddCanteenPageRoutingModule
   ],
-  declarations: [AddCantinePage]
+  declarations: [AddCanteenPage]
 })
-export class AddCantinePageModule {}
+export class AddCanteenPageModule { }

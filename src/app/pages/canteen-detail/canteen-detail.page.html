@@ -1,24 +1,30 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Mensa {{cantine?.cantine?.name}} {{cantine?.cantine?.city}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mensa {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Mensa {{cantine?.cantine?.name}} {{cantine?.cantine?.city}}</ion-title>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">Mensa {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div *ngIf="!cantine?.cantine">
+  <div *ngIf="!canteen?.canteen">
     Errore: Questa mensa non esiste o non è stata aggiunta
   </div>
 
-  <ion-list *ngIf="cantine?.cantine" [inset]="true">
+  <ion-list *ngIf="canteen?.canteen" [inset]="true">
     <ion-item>
       <ion-label><strong>Nome </strong></ion-label>
-      <ion-input [(ngModel)]="cantine.name" (ionChange)="update()"></ion-input>
+      <ion-input [(ngModel)]="canteen.name" (ionChange)="update()"></ion-input>
     </ion-item>
 
 
@@ -26,12 +32,12 @@
       <strong>Colore</strong>
       <div class="colors-container">
         <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
-          [ngClass]="{'color-selected':color==cantine.color}" (click)="selectColor(color)"></div>
+          [ngClass]="{'color-selected':color==canteen.color}" (click)="selectColor(color)"></div>
       </div>
     </ion-item>
 
     <ion-item>
-      <ion-checkbox justify="space-between" [(ngModel)]="cantine.notifications" (ionChange)="update()"><strong>Inserisci
+      <ion-checkbox justify="space-between" [(ngModel)]="canteen.notifications" (ionChange)="update()"><strong>Inserisci
           nelle notifiche</strong></ion-checkbox>
     </ion-item>
 
@@ -50,7 +56,7 @@
   </ion-button>
 
   <ion-button class="margin-top-20" expand="block" color="primary" (click)="addToCalendar()"
-    *ngIf="cantine?.cantine?.sharing">
+    *ngIf="canteen?.canteen?.sharing">
     <ion-icon slot="start" name="calendar-outline"></ion-icon>
     Aggiungi al tuo calendario
   </ion-button>

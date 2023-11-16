@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CantineDetailPageRoutingModule } from './cantine-detail-routing.module';
+import { CanteenDetailPageRoutingModule } from './canteen-detail-routing.module';
 
-import { CantineDetailPage } from './cantine-detail.page';
+import { CanteenDetailPage } from './canteen-detail.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CantineDetailPageRoutingModule
+    CanteenDetailPageRoutingModule
   ],
-  declarations: [CantineDetailPage]
+  declarations: [CanteenDetailPage]
 })
-export class CantineDetailPageModule {}
+export class CanteenDetailPageModule { }

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LocalCantine } from 'src/app/models/cantine';
+import { LocalCanteen } from 'src/app/models/canteen';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Browser } from '@capacitor/browser';
 
 @Component({
-  selector: 'app-cantine-detail',
-  templateUrl: './cantine-detail.page.html',
-  styleUrls: ['./cantine-detail.page.scss'],
+  selector: 'app-canteen-detail',
+  templateUrl: './canteen-detail.page.html',
+  styleUrls: ['./canteen-detail.page.scss'],
 })
-export class CantineDetailPage implements OnInit {
+export class CanteenDetailPage implements OnInit {
 
-  cantine!: LocalCantine;
+  canteen!: LocalCanteen;
 
   colors: string[] = [];
 
@@ -39,7 +39,7 @@ export class CantineDetailPage implements OnInit {
     this.activatedRoute.queryParams.subscribe(async (params) => {
       const id = params['id']
       if (id) {
-        this.cantine = await this.settingsService.getCantine(id) ?? {} as LocalCantine;
+        this.canteen = await this.settingsService.getCanteen(id) ?? {} as LocalCanteen;
       }
     })
     this.colors = this.settingsService.getColors();
@@ -47,16 +47,16 @@ export class CantineDetailPage implements OnInit {
   }
 
   update() {
-    this.settingsService.updateCantine(this.cantine);
+    this.settingsService.updateCanteen(this.canteen);
   }
 
   selectColor(color: string) {
-    this.cantine.color = color;
+    this.canteen.color = color;
     this.update();
   }
 
   delete() {
-    this.settingsService.removeCantine(this.cantine);
+    this.settingsService.removeCanteen(this.canteen);
     this.back();
   }
 
@@ -65,8 +65,8 @@ export class CantineDetailPage implements OnInit {
   }
 
   async addToCalendar() {
-    if (this.cantine.cantine.sharing) {
-      await Browser.open({ url: this.cantine.cantine.sharing });
+    if (this.canteen.canteen.sharing) {
+      await Browser.open({ url: this.canteen.canteen.sharing });
 
     }
   }

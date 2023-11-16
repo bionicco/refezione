@@ -13,36 +13,32 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card>
+  <ion-card class="main-card">
     <ion-card-header>
-      <ion-card-title>Mense selezionate</ion-card-title>
+      <ion-card-title class="settings-card-title">Mense selezionate</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let cantine of myCantines" [button]="true" (click)="openCantine(cantine)">
-          <ion-icon aria-hidden="true" name="ellipse" slot="start" style="color:{{cantine.color}}"></ion-icon>
+        <ion-item *ngFor="let canteen of myCanteens" [button]="true" (click)="openCanteen(canteen)">
+          <ion-icon aria-hidden="true" name="ellipse" slot="start" style="color:{{canteen.color}}"></ion-icon>
           <ion-label class="ion-text-wrap">
-            <h4> {{cantine.name}}</h4>
-            <p>{{cantine.cantine.city}} {{cantine.cantine.name}}</p>
+            <h4> {{canteen.name}}</h4>
+            <p>{{canteen.canteen.city}} {{canteen.canteen.name}}</p>
           </ion-label>
           <ion-icon aria-hidden="true" name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
 
-        <ion-card *ngIf="!myCantines?.length">
-          <ion-card-header>
-            <ion-card-title>Non è stata aggiunta nessuna mensa</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p>Aggiungine una con il pulsante in basso</p>
-          </ion-card-content>
-        </ion-card>
+        <ion-label class="ion-text-wrap" *ngIf="!myCanteens?.length">
+          <p>Non è stata ancora aggiunta nessuna mensa</p>
+        </ion-label>
       </ion-list>
+      <ion-button expand="block" [routerLink]="'/add-canteen'">Aggiungi mensa</ion-button>
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+  <ion-card class="main-card">
     <ion-card-header>
-      <ion-card-title>Notifiche</ion-card-title>
+      <ion-card-title class="settings-card-title">Notifiche</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -62,7 +58,8 @@
             (ionChange)="changeTimeHours($event)">
             <ion-select-option *ngFor="let hour of hours" [value]="hour">{{hour | number : '2.0-0'}}</ion-select-option>
           </ion-select>&nbsp;:&nbsp;
-          <ion-select [value]="settings.notificationsTimeMinute" (ionChange)="changeTimeMinutes($event)">
+          <ion-select [value]="settings.notificationsTimeMinute" (ionChange)="changeTimeMinutes($event)"
+            class="settings-time-select2">
             <ion-select-option *ngFor="let minute of minutes" [value]="minute">{{minute | number :
               '2.0-0'}}</ion-select-option>
           </ion-select>
@@ -78,11 +75,11 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+  <!-- <ion-fab slot="fixed" horizontal="end" vertical="bottom">
     <ion-fab-button>
-      <ion-icon name="add" [routerLink]="'/add-cantine'"></ion-icon>
+      <ion-icon name="add" [routerLink]="'/add-canteen'"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
 
 </ion-content>

@@ -15,50 +15,55 @@
 
   <ion-spinner *ngIf="loading"></ion-spinner>
 
-  <ion-accordion-group #accordionGroup expand="inset" [hidden]="loading">
-    <ion-accordion [value]="eventGroup.date | dfnsFormat: dateFormat" *ngFor="let eventGroup of eventGroups">
-      <!-- <div #today id="today" *ngIf="isToday(eventGroup.date)"></div> -->
-      <ion-item slot="header">
-        <ion-icon name="ellipse" size="small" *ngIf="isToday(eventGroup.date)"></ion-icon>
-        <ion-label>
-          <span class="date-name">{{eventGroup.date | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
-          <span class="date-sub">{{eventGroup.date | myDate}}</span>
-        </ion-label>
-      </ion-item>
+  <div [hidden]="loading">
+    <ng-container *ngFor="let eventGroup of eventGroupsPast">
+      <ng-container *ngTemplateOutlet="eventGroupTemplate;context:{data:eventGroup}"></ng-container>
+    </ng-container>
+    <div #today id="today" style="margin-top: -90px; position: absolute;"></div>
+    <ng-container *ngFor="let eventGroup of eventGroupsFuture">
+      <ng-container *ngTemplateOutlet="eventGroupTemplate;context:{data:eventGroup}"></ng-container>
+    </ng-container>
 
-      <div slot="content">
+    <ng-template #eventGroupTemplate let-eventGroup="data">
+      <ion-card class="main-card">
+        <ion-card-header>
+          <ion-card-title class="menu-card-title">
+            <ion-icon name="ellipse" color="primary" size="small" *ngIf="isToday(eventGroup.date)"></ion-icon>
+            <span class="date-name">{{eventGroup.date | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
+            <span class="date-sub">{{eventGroup.date | myDate}}</span>
+          </ion-card-title>
+        </ion-card-header>
 
-        <ion-card *ngFor="let event of eventGroup.events">
-          <ion-card-header style="background-color: {{event.cantine.color}}">
-            <ion-card-subtitle>{{event.cantine.name}}</ion-card-subtitle>
-          </ion-card-header>
+        <ion-card-content>
+          <ion-card *ngFor="let event of eventGroup.events">
+            <ion-card-header style="background-color: {{event.canteen.color}}">
+              <ion-card-subtitle class="menu-card-subtitle">{{event.canteen.name}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item *ngFor="let food of event.foods">
+                {{food}}
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
+  </div>
 
-          <ion-card-content>
-            <ion-item *ngFor="let food of event.foods">
-              {{food}}
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
-
-
-      </div>
-    </ion-accordion>
-
-  </ion-accordion-group>
-
-  <ion-card *ngIf="!eventGroups?.length && !loading">
+  <ion-card class="main-card" *ngIf="!eventGroupsPast?.length && !eventGroupsFuture?.length && !loading">
     <ion-card-header>
-      <ion-card-title *ngIf="cantines.length === 0">Non sono è stata aggiunta alcuna mensa</ion-card-title>
-      <ion-card-title *ngIf="cantines.length === 1">Non sono presenti menu per questo periodo nella mensa
+      <ion-card-title *ngIf="canteens.length === 0">Non sono è stata ancora aggiunta nessuna mensa</ion-card-title>
+      <ion-card-title *ngIf="canteens.length === 1">Non sono presenti menu per questo periodo nella mensa
         selezionata</ion-card-title>
-      <ion-card-title *ngIf="cantines.length > 1">Non sono presenti menu per questo periodo nelle {{cantines.length}}
+      <ion-card-title *ngIf="canteens.length > 1">Non sono presenti menu per questo periodo nelle
+        {{canteens.length}}
         mense selezionate</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p *ngIf="cantines.length > 0">
-        Per ottenere maggiori risultati potrebbe essere utile aggiungere altre mense
+      <p *ngIf="canteens.length > 0">
+        Per ottenere maggiori risultati potrebbe essere necessario aggiungere altre mense
       </p>
-      <ion-button expand="block" color="primary" [routerLink]="['/add-cantine']">
+      <ion-button expand="block" color="primary" [routerLink]="['/add-canteen']">
         <ion-icon slot="add" name="arrow-back-outline"></ion-icon>
         Aggiungi mensa
       </ion-button>

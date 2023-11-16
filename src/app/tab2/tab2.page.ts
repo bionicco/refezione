@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalCantine } from '../models/cantine';
+import { LocalCanteen } from '../models/canteen';
 import { SettingsService } from '../services/settings.service';
 import { Settings } from '../models/settings';
 
@@ -16,7 +16,7 @@ export class Tab2Page implements OnInit {
 
   minutes = [0, 10, 20, 30, 40, 50];
 
-  myCantines: LocalCantine[] = [];
+  myCanteens: LocalCanteen[] = [];
 
   constructor(
     private settingsService: SettingsService
@@ -25,12 +25,12 @@ export class Tab2Page implements OnInit {
   }
 
   async ngOnInit() {
-    this.settingsService.getMyCantines().then((data) => {
-      this.myCantines = data;
+    this.settingsService.getMyCanteens().then((data) => {
+      this.myCanteens = data;
     });
 
-    this.settingsService.updatedCantines.subscribe((data) => {
-      this.myCantines = data;
+    this.settingsService.updatedCanteens.subscribe((data) => {
+      this.myCanteens = data;
     });
 
     this.settings = await this.settingsService.getSettings();
@@ -38,8 +38,8 @@ export class Tab2Page implements OnInit {
 
 
 
-  openCantine(cantine: LocalCantine) {
-    this.settingsService.openCantine(cantine.cantine.id);
+  openCanteen(canteen: LocalCanteen) {
+    this.settingsService.openCanteen(canteen.canteen.id);
   }
 
   setNotification(event: any) {

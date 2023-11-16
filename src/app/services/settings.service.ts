@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalCantine, RemoteCantine } from '../models/cantine';
+import { LocalCanteen, RemoteCanteen } from '../models/canteen';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -7,7 +7,7 @@ import { Settings } from '../models/settings';
 import { ToastController } from '@ionic/angular';
 import { CalendarEventRaw } from '../models/event';
 
-const CANTINE_STORAGE_KEY = 'myCantines';
+const CANTINE_STORAGE_KEY = 'myCanteens';
 const SETTINGS_STORAGE_KEY = 'settings';
 const SETTINGS_CACHE_KEY = 'cached';
 const DEFAULT_TOAST_DURATION = 1500;
@@ -17,9 +17,9 @@ const DEFAULT_TOAST_DURATION = 1500;
 })
 export class SettingsService {
 
-  cantines: LocalCantine[] = [];
+  canteens: LocalCanteen[] = [];
 
-  selectedCantine?: LocalCantine;
+  selectedCanteen?: LocalCanteen;
 
   settings: Settings = {
     notifications: true,
@@ -28,7 +28,7 @@ export class SettingsService {
     notificationsTimeMinute: 0
   };
 
-  updatedCantines: Subject<LocalCantine[]> = new Subject();
+  updatedCanteens: Subject<LocalCanteen[]> = new Subject();
 
   updatedSettings: Subject<Settings> = new Subject();
 
@@ -61,83 +61,83 @@ export class SettingsService {
     // If using a custom driver:
     // await this.storage.defineDriver(MyCustomDriver)
     await this.storage.create();
-    this.cantines = await this.getMyCantines();
+    this.canteens = await this.getMyCanteens();
   }
 
-  async getMyCantines(): Promise<LocalCantine[]> {
-    const cantines = await this.storage.get(CANTINE_STORAGE_KEY);
-    return cantines || [];
+  async getMyCanteens(): Promise<LocalCanteen[]> {
+    const canteens = await this.storage.get(CANTINE_STORAGE_KEY);
+    return canteens || [];
   }
 
-  async addCantine(cantine: LocalCantine): Promise<boolean> {
-    const cantines = await this.getMyCantines();
-    if (!cantines.find((c) => c.cantine.id === cantine.cantine.id)) {
-      cantines.push(cantine);
-      this.saveCantines(cantines);
+  async addCanteen(canteen: LocalCanteen): Promise<boolean> {
+    const canteens = await this.getMyCanteens();
+    if (!canteens.find((c) => c.canteen.id === canteen.canteen.id)) {
+      canteens.push(canteen);
+      this.saveCanteens(canteens);
       return true;
     }
     return false;
   }
 
-  async updateLocalCantinesValues(cantines: RemoteCantine[]) {
-    const myCantines = await this.getMyCantines();
-    myCantines.forEach((c) => {
-      const remoteCantine = cantines.find((rc) => rc.id === c.cantine.id);
-      if (remoteCantine) {
-        c.cantine = remoteCantine;
+  async updateLocalCanteensValues(canteens: RemoteCanteen[]) {
+    const myCanteens = await this.getMyCanteens();
+    myCanteens.forEach((c) => {
+      const remoteCanteen = canteens.find((rc) => rc.id === c.canteen.id);
+      if (remoteCanteen) {
+        c.canteen = remoteCanteen;
       }
     });
-    this.saveCantines(myCantines);
+    this.saveCanteens(myCanteens);
   }
 
-  async updateCantine(cantine: LocalCantine): Promise<void> {
-    const cantines = await this.getMyCantines();
-    const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
-    cantines[index] = cantine;
-    this.saveCantines(cantines);
+  async updateCanteen(canteen: LocalCanteen): Promise<void> {
+    const canteens = await this.getMyCanteens();
+    const index = canteens.findIndex((c) => c.canteen.id === canteen.canteen.id);
+    canteens[index] = canteen;
+    this.saveCanteens(canteens);
   }
 
-  async removeCantine(cantine: LocalCantine): Promise<void> {
-    const cantines = await this.getMyCantines();
-    const index = cantines.findIndex((c) => c.cantine.id === cantine.cantine.id);
-    cantines.splice(index, 1);
-    this.saveCantines(cantines);
-    this.presentToast(`${cantine.name} rimossa!`, 'danger');
+  async removeCanteen(canteen: LocalCanteen): Promise<void> {
+    const canteens = await this.getMyCanteens();
+    const index = canteens.findIndex((c) => c.canteen.id === canteen.canteen.id);
+    canteens.splice(index, 1);
+    this.saveCanteens(canteens);
+    this.presentToast(`${canteen.name} rimossa!`, 'danger');
   }
 
-  async saveCantines(cantines: LocalCantine[]): Promise<void> {
-    await this.storage.set(CANTINE_STORAGE_KEY, cantines);
-    this.cantines = cantines;
-    this.updatedCantines.next(cantines);
+  async saveCanteens(canteens: LocalCanteen[]): Promise<void> {
+    await this.storage.set(CANTINE_STORAGE_KEY, canteens);
+    this.canteens = canteens;
+    this.updatedCanteens.next(canteens);
   }
 
-  async addNewCantine(cantine: RemoteCantine) {
-    await this.addCantine({
-      name: `${cantine.city}-${cantine.name}`,
+  async addNewCanteen(canteen: RemoteCanteen) {
+    await this.addCanteen({
+      name: `${canteen.city}-${canteen.name}`,
       color: this.getNewColor(),
-      cantine: cantine,
+      canteen: canteen,
       notifications: true
     });
-    this.presentToast(`${cantine.city}-${cantine.name} aggiunta!`, 'success');
+    this.presentToast(`${canteen.city}-${canteen.name} aggiunta!`, 'success');
   }
 
-  async getCacheResult(cantine: LocalCantine): Promise<CalendarEventRaw[]> {
-    const results = await this.storage.get(`${SETTINGS_CACHE_KEY}-${cantine.cantine.id}`) || [];
+  async getCacheResult(canteen: LocalCanteen): Promise<CalendarEventRaw[]> {
+    const results = await this.storage.get(`${SETTINGS_CACHE_KEY}-${canteen.canteen.id}`) || [];
     return results;
   }
 
-  async saveCacheResult(cantine: LocalCantine, results: CalendarEventRaw[]): Promise<void> {
-    await this.storage.set(`${SETTINGS_CACHE_KEY}-${cantine.cantine.id}`, results);
+  async saveCacheResult(canteen: LocalCanteen, results: CalendarEventRaw[]): Promise<void> {
+    await this.storage.set(`${SETTINGS_CACHE_KEY}-${canteen.canteen.id}`, results);
   }
 
-  async getCantine(id: number): Promise<LocalCantine | undefined> {
-    const cantines = await this.getMyCantines();
-    const cantine = cantines.find((c) => c.cantine.id == id);
-    return cantine;
+  async getCanteen(id: number): Promise<LocalCanteen | undefined> {
+    const canteens = await this.getMyCanteens();
+    const canteen = canteens.find((c) => c.canteen.id == id);
+    return canteen;
   }
 
-  openCantine(cantineId: number) {
-    this.router.navigate(['/cantine-detail'], { queryParams: { id: cantineId } });
+  openCanteen(canteenId: number) {
+    this.router.navigate(['/canteen-detail'], { queryParams: { id: canteenId } });
   }
 
   async getSettings() {
@@ -153,8 +153,8 @@ export class SettingsService {
 
   getNewColor(): string {
     for (let color of this.palette) {
-      const cantineUsing = this.cantines.find((c) => c.color === color);
-      if (!cantineUsing) {
+      const canteenUsing = this.canteens.find((c) => c.color === color);
+      if (!canteenUsing) {
         return color;
       }
     }

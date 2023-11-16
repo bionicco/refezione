@@ -1,4 +1,4 @@
-export interface RemoteCantine {
+export interface RemoteCanteen {
     id: number,
     name: string,
     calendarId: string,
@@ -10,9 +10,9 @@ export interface RemoteCantine {
     sharing?: string,
 }
 
-export interface LocalCantine {
+export interface LocalCanteen {
     name: string,
     color?: string,
-    cantine: RemoteCantine,
+    canteen: RemoteCanteen,
     notifications: boolean,
 }

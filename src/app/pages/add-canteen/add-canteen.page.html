@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Aggiunta mensa</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Ricerca mensa" (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">Aggiunta mensa</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar placeholder="Ricerca mensa" (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-card class="main-card">
+    <ion-card-header *ngIf="!canteens?.length">
+
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let canteen of canteens" (click)="addCanteen(canteen,!!canteen.isAdded )">
+          <ion-icon aria-hidden="true" name="add" slot="end" *ngIf="!canteen.isAdded"></ion-icon>
+          <ion-icon aria-hidden="true" color="success" name="checkmark-circle-outline" slot="end"
+            *ngIf="canteen.isAdded"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <p>{{canteen.province}}-{{canteen.city}}</p>
+            {{canteen.name}}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

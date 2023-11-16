@@ -7,12 +7,12 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'add-cantine',
-    loadChildren: () => import('./pages/add-cantine/add-cantine.module').then( m => m.AddCantinePageModule)
+    path: 'add-canteen',
+    loadChildren: () => import('./pages/add-canteen/add-canteen.module').then(m => m.AddCanteenPageModule)
   },
   {
-    path: 'cantine-detail',
-    loadChildren: () => import('./pages/cantine-detail/cantine-detail.module').then( m => m.CantineDetailPageModule)
+    path: 'canteen-detail',
+    loadChildren: () => import('./pages/canteen-detail/canteen-detail.module').then(m => m.CanteenDetailPageModule)
   }
 ];
 @NgModule({
@@ -21,4 +21,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

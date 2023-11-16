@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
     </ion-buttons>
-    <ion-title>Mensa {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}</ion-title>
+    <ion-title>Dettaglio mensa</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,13 +13,17 @@
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
       </ion-buttons>
-      <ion-title size="large">Mensa {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}</ion-title>
+      <ion-title size="large">Dettaglio mensa</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div *ngIf="!canteen?.canteen">
     Errore: Questa mensa non esiste o non è stata aggiunta
   </div>
+
+  <ion-note class="ion-text-wrap detail-note">
+    {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}
+  </ion-note>
 
   <ion-list *ngIf="canteen?.canteen">
     <ion-item>
@@ -75,14 +79,14 @@
     Elimina
   </ion-button>
 
-  <ion-button class="margin-top-20" expand="block" color="primary" (click)="addToCalendar()"
+  <ion-button class="margin-top-20" expand="block" color="secondary" (click)="addToCalendar()"
     *ngIf="canteen?.canteen?.sharing">
     <ion-icon slot="start" name="calendar-outline"></ion-icon>
     Aggiungi a google calendar
   </ion-button>
 
   <ion-button class="margin-top-20" expand="block" (click)="back()">
-    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    <ion-icon slot="start" name="home-outline"></ion-icon>
     Ritorna
   </ion-button>
 

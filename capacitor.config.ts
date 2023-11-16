@@ -9,21 +9,19 @@ const config: CapacitorConfig = {
   },
   plugins: {
     LocalNotifications: {
-      // smallIcon: "ic_stat_icon_config_sample",
-      iconColor: "#488AFF",
-      // sound: "beep.wav",
+      smallIcon: "notification",
+      iconColor: "#0fa3b1",
+      sound: "bubble.wav",
     },
-  },
-  bundledWebRuntime: false,
-  "plugins": {
-    "SplashScreen": {
+    SplashScreen: {
       "launchShowDuration": 1000,
       "launchAutoHide": true,
       "androidScaleType": "CENTER_CROP",
       "splashImmersive": true,
-      "backgroundColor": "#003345"
+      "backgroundColor": "#eae0d5"
     }
   },
+  bundledWebRuntime: false
 };
 
 export default config;

@@ -26,6 +26,10 @@ export class AddCanteenPage implements OnInit {
     });
   }
 
+  async ionViewWillEnter() {
+    this.ngOnInit();
+  }
+
   search(event: any) {
     const query: string = event.target.value.toLowerCase();
     this.canteens = this.allCanteens.filter((c) => {

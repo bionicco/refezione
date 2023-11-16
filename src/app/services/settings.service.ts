@@ -33,21 +33,7 @@ export class SettingsService {
   updatedSettings: Subject<Settings> = new Subject();
 
 
-  palette = [
-    '#FFCCCC',
-    '#FFFFCC',
-    '#CCFFCC',
-    '#FFDAB9',
-    '#E6E6FF',
-    '#B2E5FF',
-    '#CCFFE5',
-    '#FFFCDA',
-    '#E0E0E0',
-    '#FFE0B2',
-    '#E6CCFF',
-    '#B2FFFF',
-    '#E4C1DE',
-  ];
+  palette = ["#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe", "#ffb55a", "#f5E163", "#beb9db", "#fdcce5", "#8bd3c7"]
 
   constructor(
     private storage: Storage,

@@ -8,6 +8,12 @@ export interface RemoteCanteen {
     separator: string,
     isAdded?: boolean,
     sharing?: string,
+    reference: {
+        name: string,
+        note?: string,
+        email?: string,
+        www?: string
+    }
 }
 
 export interface LocalCanteen {

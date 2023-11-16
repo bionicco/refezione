@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" color="light">
+<ion-content class="ion-padding" [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -21,7 +21,7 @@
     Errore: Questa mensa non esiste o non è stata aggiunta
   </div>
 
-  <ion-list *ngIf="canteen?.canteen" [inset]="true">
+  <ion-list *ngIf="canteen?.canteen">
     <ion-item>
       <ion-label><strong>Nome </strong></ion-label>
       <ion-input [(ngModel)]="canteen.name" (ionChange)="update()"></ion-input>
@@ -43,12 +43,32 @@
 
   </ion-list>
 
-  <ion-label class="ion-text-wrap" color="medium">
-    <p class="padding-15">Il nome può essere qualunque vi aiuti ad identificare meglio il menu a cui si fa riferimento
-      (per esempio il
-      nome
-      del bambino che mangia in quella mensa)</p>
+  <ion-note class="ion-text-wrap detail-note" color="medium">
+    Il nome può essere qualunque vi aiuti ad identificare meglio il menu a cui si fa riferimento
+    (per esempio il nome del bambino che mangia in quella mensa)
+  </ion-note>
+
+
+  <ion-label class="ion-text-wrap ion-padding" color="primary" *ngIf="canteen?.canteen?.reference as reference">
+    <h2><strong>Provenienza dati mensa</strong></h2>
+    <p class="">
+      <strong>Fornitore</strong>
+      {{reference.name}}
+    </p>
+    <p class="" *ngIf="reference.note">
+      <strong>Note</strong>
+      {{reference.note}}
+    </p>
+    <p class="" *ngIf="reference.email">
+      <strong>Email </strong>
+      <a href="mailto:{{reference.email}}">{{reference.email}}</a>
+    </p>
+    <p class="" *ngIf="reference.www">
+      <strong>Sito web </strong>
+      <a href="{{reference.www}}">visita</a>
+    </p>
   </ion-label>
+
 
   <ion-button class="margin-top-20" expand="block" color="danger" id="present-alert">
     <ion-icon slot="start" name="trash-outline"></ion-icon>

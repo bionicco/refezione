@@ -14,6 +14,16 @@ const config: CapacitorConfig = {
       // sound: "beep.wav",
     },
   },
+  bundledWebRuntime: false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1000,
+      "launchAutoHide": true,
+      "androidScaleType": "CENTER_CROP",
+      "splashImmersive": true,
+      "backgroundColor": "#003345"
+    }
+  },
 };
 
 export default config;

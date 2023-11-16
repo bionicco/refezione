@@ -91,14 +91,14 @@ export class EventsService {
       const group = groups.find((g) => g.date.getTime() === date.getTime());
       if (group) {
         group.events.push({
-          foods: event.summary.split(event.cantine.cantine.separator),
+          foods: event.summary.split(event.cantine.cantine.separator).map(s => s.trim()),
           cantine: event.cantine,
         });
       } else {
         groups.push({
           date,
           events: [{
-            foods: event.summary.split(event.cantine.cantine.separator),
+            foods: event.summary.split(event.cantine.cantine.separator).map(s => s.trim()),
             cantine: event.cantine,
 
           }],

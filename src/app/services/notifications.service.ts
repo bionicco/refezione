@@ -58,7 +58,7 @@ export class NotificationsService {
       count++;
       let fullString = ``;
       event.events.filter(x => x.cantine.notifications).forEach((event) => {
-        fullString = fullString.concat(`${event.cantine.name}\n`);
+        fullString = fullString.concat(`**${event.cantine.name}**\n`);
         fullString = fullString.concat(event.foods.join('\n'));
         fullString = fullString.concat('\n');
       });

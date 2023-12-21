@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LocalCanteen } from '../models/canteen';
 import { SettingsService } from '../services/settings.service';
 import { Settings } from '../models/settings';
+import { version } from 'src/assets/version';
 
 @Component({
   selector: 'app-tab2',
@@ -17,6 +18,8 @@ export class Tab2Page implements OnInit {
   minutes = [0, 10, 20, 30, 40, 50];
 
   myCanteens: LocalCanteen[] = [];
+
+  version = version;
 
   constructor(
     private settingsService: SettingsService

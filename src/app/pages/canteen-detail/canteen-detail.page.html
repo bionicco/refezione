@@ -22,17 +22,21 @@
   </div>
 
   <ion-note class="ion-text-wrap detail-note">
-    {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}
+    Personalizza il nome e il colore della mensa per identificarla meglio e decidi se inserirla nelle notifiche
+    quotidiane
   </ion-note>
 
   <ion-list *ngIf="canteen?.canteen">
-    <ion-item>
+    <ion-list-header>
+      {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}
+    </ion-list-header>
+    <ion-item lines="inset">
       <ion-label><strong>Nome </strong></ion-label>
       <ion-input [(ngModel)]="canteen.name" (ionChange)="update()"></ion-input>
     </ion-item>
 
 
-    <ion-item>
+    <ion-item lines="inset">
       <strong>Colore</strong>
       <div class="colors-container">
         <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
@@ -40,7 +44,7 @@
       </div>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="none">
       <ion-checkbox justify="space-between" [(ngModel)]="canteen.notifications" (ionChange)="update()"><strong>Inserisci
           nelle notifiche</strong></ion-checkbox>
     </ion-item>
@@ -94,4 +98,4 @@
 </ion-content>
 
 <ion-alert trigger="present-alert" class="custom-alert"
-  header="Vuoi davvero togliere questa mensa da quelle selezionate?" [buttons]="alertButtons"></ion-alert>
+  header="Vuoi davvero rimuovere questa mensa da quelle selezionate?" [buttons]="alertButtons"></ion-alert>

@@ -10,7 +10,7 @@ import { CalendarEventRaw } from '../models/event';
 const CANTINE_STORAGE_KEY = 'myCanteens';
 const SETTINGS_STORAGE_KEY = 'settings';
 const SETTINGS_CACHE_KEY = 'cached';
-const DEFAULT_TOAST_DURATION = 1500;
+const DEFAULT_TOAST_DURATION = 3000;
 
 @Injectable({
   providedIn: 'root'

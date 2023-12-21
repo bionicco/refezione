@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
     </ion-buttons>
-    <ion-title>Aggiunta mensa</ion-title>
+    <ion-title>Aggiungi la mensa </ion-title>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar placeholder="Ricerca mensa" (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
@@ -16,7 +16,7 @@
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/tabs/tabs2"></ion-back-button>
       </ion-buttons>
-      <ion-title size="large">Aggiunta mensa</ion-title>
+      <ion-title size="large">Aggiungi la mensa </ion-title>
     </ion-toolbar>
     <ion-toolbar>
       <ion-searchbar placeholder="Ricerca mensa" (ionInput)="search($event)" [debounce]="250"></ion-searchbar>
@@ -24,7 +24,7 @@
   </ion-header>
   <ion-card class="main-card">
     <ion-card-header *ngIf="!canteens?.length">
-
+      <p>Nessuna mensa corrisponde alla ricerca impostata, mi dispiace!</p>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -38,6 +38,17 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <div class="padding-h-30">
+        <ion-note class="ion-text-wrap " color="medium">
+          Se non è presente la mensa che stai cercando e vuoi capire per capire come può essere aggiunta
+        </ion-note>
+        <a href=" https://refezione-be.vercel.app/" target="_blank">
+          <ion-button expand="block" color="primary" fill="outline">
+            <ion-icon slot="add" name="globe-outline"></ion-icon>
+            visita il sito dell'app
+          </ion-button>
+        </a>
+      </div>
     </ion-card-content>
   </ion-card>
 

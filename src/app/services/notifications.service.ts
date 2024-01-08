@@ -101,10 +101,32 @@ export class NotificationsService {
       };
       schemas.push(schema);
     });
+    if (schemas?.length && events?.length) {
+      schemas.push(this.getFinalNotificationSchema(settings, events));
+    }
     LocalNotifications.schedule({ notifications: schemas });
     console.log("------- ~ NotificationsService ~ scheduleNotifications ~ schemas:", schemas);
   }
 
-
+  getFinalNotificationSchema(settings: Settings, events: CalendarEventGroup[]): LocalNotificationSchema {
+    const lastDate = events[events.length - 1].date;
+    addDays(lastDate, 1);
+    const notificationDate = new Date(lastDate);
+    notificationDate.setHours(settings.notificationsTimeHour);
+    notificationDate.setMinutes(settings.notificationsTimeMinute);
+    addDays(notificationDate, -settings.notificationsDay);
+    return {
+      title: 'Nessun menu disponibile',
+      body: `Non risulta nessun menu disponibile per i prossimi giorni`,
+      largeBody: `Si prega di aprire l'app per fare un aggiornamento dei dati e verificare se sono disponibili nuovi menu`,
+      id: events.length + 2,
+      schedule: {
+        at: addDays(notificationDate, 1),
+        repeats: false,
+        allowWhileIdle: true,
+      },
+      sound: 'android.resource://it.bionicco.refezione/raw/bubble.wav',
+    };
+  }
 
 }

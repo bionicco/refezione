@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Menu mensa {{canteen?.description}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">
+        Menu mensa {{canteen?.description}}
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-spinner name="dots" color="primary" *ngIf="loading"></ion-spinner>
+
+  <div [hidden]="loading">
+    <ng-container *ngFor="let eventGroup of eventGroupsPast">
+      <ng-container *ngTemplateOutlet="eventGroupTemplate;context:{data:eventGroup}"></ng-container>
+    </ng-container>
+    <div #today id="today" style="margin-top: -90px; position: absolute;"></div>
+    <ng-container *ngFor="let eventGroup of eventGroupsFuture">
+      <ng-container *ngTemplateOutlet="eventGroupTemplate;context:{data:eventGroup}"></ng-container>
+    </ng-container>
+
+    <ng-template #eventGroupTemplate let-eventGroup="data">
+      <ion-card class="main-card">
+        <ion-card-header>
+          <ion-card-title class="menu-card-title">
+            <ion-icon name="ellipse" color="primary" size="small" *ngIf="isToday(eventGroup.date)"></ion-icon>
+            <span class="date-name">{{eventGroup.date | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
+            <span class="date-sub">{{eventGroup.date | myDate}}</span>
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ng-container *ngFor="let event of eventGroup.events">
+            <ion-item *ngFor="let food of event.foods">
+              {{food}}
+            </ion-item>
+          </ng-container>
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
+  </div>
+
+  <ion-card class="main-card" *ngIf="!eventGroupsPast?.length && !eventGroupsFuture?.length && !loading">
+    <ion-card-header>
+      <ion-card-title>Non sono presenti menu per questo periodo nella mensa
+        selezionata</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Riprovare più tardi
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+
+</ion-content>

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { EventsService } from '../services/events.service';
 import { CalendarEventGroup } from '../models/event';
-import { IonAccordionGroup, IonContent } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
 
 import { isToday } from 'date-fns';
 import { isAfter } from 'date-fns';
@@ -23,7 +23,7 @@ export class Tab1Page implements OnInit {
 
   public canteens: LocalCanteen[] = [];
 
-  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
+  // @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
 
 
   @ViewChild('today') todayElement!: ElementRef;

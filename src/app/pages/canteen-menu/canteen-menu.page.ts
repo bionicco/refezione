@@ -13,6 +13,7 @@ import { isAfter } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { ActivatedRoute } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import { Browser } from '@capacitor/browser';
 
 
 @Component({
@@ -82,7 +83,7 @@ export class CanteenMenuPage implements OnInit {
 
   async loadEvents() {
     const localCantine: LocalCanteen = {
-      name: this.canteen!.description,
+      name: this.canteen!.name,
       canteen: this.canteen!,
       notifications: false
     };
@@ -110,6 +111,13 @@ export class CanteenMenuPage implements OnInit {
 
   isToday(date: Date): boolean {
     return isToday(date);
+  }
+
+  async addToCalendar() {
+    if (this.canteen?.sharing) {
+      await Browser.open({ url: this.canteen.sharing });
+
+    }
   }
 
 }

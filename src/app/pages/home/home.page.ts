@@ -21,7 +21,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.platform.is('android')) {
+    if (this.platform.is('android') && this.platform.is('capacitor')) {
       this.router.navigate(['/tabs']);
     } else {
       this.loadCanteens();

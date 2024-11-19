@@ -28,7 +28,7 @@
 
   <ion-list *ngIf="canteen?.canteen">
     <ion-list-header>
-      {{canteen?.canteen?.name}} {{canteen?.canteen?.city}}
+      {{canteen.canteen.name}} {{canteen.canteen.city}}
     </ion-list-header>
     <ion-item lines="inset">
       <ion-label><strong>Nome </strong></ion-label>
@@ -40,7 +40,7 @@
       <strong>Colore</strong>
       <div class="colors-container">
         <div class="color-icon" *ngFor="let color of colors" aria-hidden="true" style="background-color: {{color}}"
-          [ngClass]="{'color-selected':color==canteen.color}" (click)="selectColor(color)"></div>
+          [ngClass]="{'color-selected':color===canteen.color}" (click)="selectColor(color)"></div>
       </div>
     </ion-item>
 

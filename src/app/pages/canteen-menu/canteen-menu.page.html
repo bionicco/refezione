@@ -1,7 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
     <ion-title>
-      Menu mensa {{canteen?.description}}
+      Menu {{canteen?.name}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,8 +12,11 @@
 <ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
       <ion-title size="large">
-        Menu mensa {{canteen?.description}}
+        Menu {{canteen?.name}}
       </ion-title>
     </ion-toolbar>
   </ion-header>
@@ -58,6 +64,48 @@
       </p>
     </ion-card-content>
   </ion-card>
+
+  <ion-note class="ion-padding add-favourite" *ngIf="!loading">
+    Aggiungi questa pagina ai preferiti del browser per poter accedere direttamente a questo menu.
+  </ion-note>
+
+  <ion-card *ngIf="canteen?.reference as reference">
+    <ion-card-header>
+      <ion-card-title class="menu-card-title ion-text-wrap ion-padding">
+
+        <h2><strong>Provenienza dati mensa</strong></h2>
+
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-label class="" color="primary">
+        <p class="">
+          <strong>Fornitore</strong>
+          {{reference.name}}
+        </p>
+        <p class="" *ngIf="reference.note">
+          <strong>Note</strong>
+          {{reference.note}}
+        </p>
+        <p class="" *ngIf="reference.email">
+          <strong>Email </strong>
+          <a href="mailto:{{reference.email}}">{{reference.email}}</a>
+        </p>
+        <p class="" *ngIf="reference.www">
+          <strong>Sito web </strong>
+          <a href="{{reference.www}}">visita</a>
+        </p>
+      </ion-label>
+
+
+      <ion-button class="margin-top-20" expand="block" color="secondary" (click)="addToCalendar()"
+        *ngIf="canteen?.sharing">
+        <ion-icon slot="start" name="calendar-outline"></ion-icon>
+        Aggiungi a google calendar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
 
 
 </ion-content>

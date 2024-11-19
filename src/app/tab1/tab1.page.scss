@@ -1,8 +1,24 @@
 .date-name {
+    font-weight: 600;
 }
+
+.date-name-single {
+    font-weight: 600;
+    color: #fff;
+}
+
 .date-sub {
-    font-size: 0.9 em;
+    font-size: 0.9rem;
     color: #999;
+}
+
+.date-sub-single {
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.date-ellipse {
+    margin-right: 10px;
 }
 
 ion-spinner {

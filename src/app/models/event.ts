@@ -7,7 +7,8 @@ export interface CalendarEventRaw {
     }
     start: CalendarRawDate,
     end: CalendarRawDate,
-    canteen: LocalCanteen
+    canteen: LocalCanteen,
+    recurrence: string[]
 }
 
 export interface CalendarRawDate {

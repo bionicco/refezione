@@ -3,11 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, forkJoin, from, map } from 'rxjs';
 import { CalendarEventGroup, CalendarEventRaw } from '../models/event';
 import { LocalCanteen, RemoteCanteen } from '../models/canteen';
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
 import { SettingsService } from './settings.service';
+import { RRule } from 'rrule';
 
 const baseUrl = 'https://refezione-be.vercel.app/api';
 const defaultAddDays = -7;
+
+const MAX_RECURRENCE = 10;
 
 @Injectable({
   providedIn: 'root'
@@ -87,24 +90,37 @@ export class EventsService {
   normalizeEvents(events: CalendarEventRaw[], canteens: LocalCanteen[]): CalendarEventGroup[] {
     const groups: CalendarEventGroup[] = [];
     events.forEach((event) => {
-      const date = new Date(event.start.date);
-      const group = groups.find((g) => g.date.getTime() === date.getTime());
-      if (group) {
-        group.events.push({
-          foods: event.summary.split(event.canteen.canteen.separator).map(s => s.trim()),
-          canteen: event.canteen,
-        });
-      } else {
-        groups.push({
-          date,
-          events: [{
+      const startDate = new Date(event.start.date);
+      let dates = [startDate];
+      if (event.recurrence?.length) {
+        let recurrence = event.recurrence[0];
+        if (!recurrence.includes('COUNT') && !recurrence.includes('UNTIL')) {
+          recurrence += ';COUNT=' + MAX_RECURRENCE;
+
+        }
+        const stringRule = `DTSTART:${format(startDate, 'yyyyMMdd')}T190000;\n${recurrence}`
+        const rule = RRule.fromString(stringRule);
+        dates = rule.all().map((d) => new Date(d));
+      }
+      dates.forEach((date) => {
+        const group = groups.find((g) => g.date.getTime() === date.getTime());
+        if (group) {
+          group.events.push({
             foods: event.summary.split(event.canteen.canteen.separator).map(s => s.trim()),
             canteen: event.canteen,
-
-          }],
-        });
-      }
+          });
+        } else {
+          groups.push({
+            date,
+            events: [{
+              foods: event.summary.split(event.canteen.canteen.separator).map(s => s.trim()),
+              canteen: event.canteen,
+            }],
+          });
+        }
+      })
     }
+
     );
     return groups.sort((a, b) => a.date.getTime() - b.date.getTime());
   }

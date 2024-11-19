@@ -26,25 +26,42 @@
 
     <ng-template #eventGroupTemplate let-eventGroup="data">
       <ion-card class="main-card">
-        <ion-card-header>
+        <ion-card-header
+          [ngStyle]="{'background-color': eventGroup.events.length === 1 ? eventGroup.events[0].canteen.color : '#88d7df68'}">
           <ion-card-title class="menu-card-title">
-            <ion-icon name="ellipse" color="primary" size="small" *ngIf="isToday(eventGroup.date)"></ion-icon>
-            <span class="date-name">{{eventGroup.date | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
-            <span class="date-sub">{{eventGroup.date | myDate}}</span>
+            <ion-icon class="date-ellipse" name="ellipse" color="primary" size="small"
+              *ngIf="isToday(eventGroup.date)"></ion-icon>
+            <span
+              [ngClass]="{'date-name':eventGroup.events.length > 1, 'date-name-single':eventGroup.events.length === 1}">{{eventGroup.date
+              | dfnsFormat : 'dd/MM/yy EEEE'}}</span>
+            <span
+              [ngClass]="{'date-sub':eventGroup.events.length > 1, 'date-sub-single':eventGroup.events.length === 1}">{{eventGroup.date
+              | myDate}}</span>
           </ion-card-title>
         </ion-card-header>
 
         <ion-card-content>
-          <ion-card *ngFor="let event of eventGroup.events">
-            <ion-card-header style="background-color: {{event.canteen.color}}">
-              <ion-card-subtitle class="menu-card-subtitle">{{event.canteen.name}}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
+          <ng-container *ngIf="eventGroup.events.length > 1">
+            <ion-card *ngFor="let event of eventGroup.events">
+              <ion-card-header style="background-color: {{event.canteen.color}}">
+                <ion-card-subtitle class="menu-card-subtitle">{{event.canteen.name}}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-item *ngFor="let food of event.foods">
+                  {{food}}
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+
+          <ng-container *ngIf="eventGroup.events.length === 1">
+            <ng-container *ngIf="eventGroup.events[0] as event">
               <ion-item *ngFor="let food of event.foods">
                 {{food}}
               </ion-item>
-            </ion-card-content>
-          </ion-card>
+            </ng-container>
+          </ng-container>
+
         </ion-card-content>
       </ion-card>
     </ng-template>

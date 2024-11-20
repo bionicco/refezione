@@ -68,7 +68,7 @@ if [[ $action != "serve" ]]; then
 
     #Check old  archive
     if [ -f $archivepath ]; then
-        echo "Use last version archive (${MAYOR}.${MINOR}.${BUILD} - ${ANDROIDVERSION}) ?"
+        echo "Use last version ${MAYOR}.${MINOR}.${BUILD} - ${ANDROIDVERSION}"
         select USELAST in no yes exit; do
             case $USELAST in
             no | yes) break ;;
@@ -88,7 +88,6 @@ if [[ $action != "serve" ]]; then
         #ask new version
         echo "Last version: $MAYOR.$MINOR.$BUILD - ${ANDROIDVERSION}"
         read -p "New mayor (last $MAYOR) - enter for no change?" newMayor
-
         if [[ -z "$newMayor" ]]; then
             read -p "New minor (last $MINOR) - enter for no change?" newMinor
             if [[ -z "$newMinor" ]]; then
@@ -102,6 +101,9 @@ if [[ $action != "serve" ]]; then
             MINOR=0
             BUILD=0
         fi
+
+        echo "New version: $MAYOR.$MINOR.$BUILD"
+        echo "$ANDROIDVERSION"
 
         ANDROIDVERSION=$(($ANDROIDVERSION + 1))
 

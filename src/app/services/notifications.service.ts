@@ -118,7 +118,7 @@ export class NotificationsService {
     return {
       title: 'Nessun menu disponibile',
       body: `Non risulta nessun menu disponibile per i prossimi giorni`,
-      largeBody: `Si prega di aprire l'app per fare un aggiornamento dei dati e verificare se sono disponibili nuovi menu`,
+      largeBody: `Si prega di aprire l'app per fare un aggiornamento dei dati e verificare se sono disponibili nuovi dati per i prossimi giorni. Se non ci fossero riprovare piu tardi o nei prossimi giorni.`,
       id: events.length + 2,
       schedule: {
         at: addDays(notificationDate, 1),

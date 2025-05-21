@@ -5,10 +5,12 @@ export interface CalendarEventRaw {
     organizer: {
         displayName: string,
     }
-    start: CalendarRawDate,
-    end: CalendarRawDate,
+    start?: CalendarRawDate,
+    end?: CalendarRawDate,
     canteen: LocalCanteen,
-    recurrence: string[]
+    recurrence: string[],
+    status: string,
+    originalStartTime?: CalendarRawDate,
 }
 
 export interface CalendarRawDate {

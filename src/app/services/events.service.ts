@@ -90,7 +90,11 @@ export class EventsService {
   normalizeEvents(events: CalendarEventRaw[], canteens: LocalCanteen[]): CalendarEventGroup[] {
     const groups: CalendarEventGroup[] = [];
     events.forEach((event) => {
-      const startDate = new Date(event.start.date);
+      // check if a date is cancelled
+      if (event.status === 'cancelled' || !event.start?.date) {
+        return;
+      }
+      const startDate = new Date(event.start?.date);
       let dates = [startDate];
       if (event.recurrence?.length) {
         let recurrence = event.recurrence[0];
@@ -103,6 +107,14 @@ export class EventsService {
         dates = rule.all().map((d) => new Date(d));
       }
       dates.forEach((date) => {
+        // check if a date is cancelled
+        const cancelled = events.find((checkedEvent) => {
+          return checkedEvent.status === 'cancelled' && checkedEvent?.originalStartTime?.date && new Date(checkedEvent.originalStartTime.date).toDateString() === date.toDateString()
+        });
+        if (cancelled) {
+          return;
+        }
+
         const group = groups.find((g) => g.date.getTime() === date.getTime());
         if (group) {
           group.events.push({
